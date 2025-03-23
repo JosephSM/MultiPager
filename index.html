@@ -42,30 +42,32 @@
             let accordian = document.querySelector("#accordionPanelsStayOpenExample")
             let params = new URLSearchParams(document.location.search);
             let hastitle = params.get("Title")
+            console.log(hastitle)
             let title = hastitle? hastitle: "";
-            
+          
             params.keys().forEach((i,idx) => {
-                if(!hastitle){
-                    title += i + ", "
-                }
-                let html =  `<div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="false" aria-controls="panelsStayOpen-collapse${idx}">
-                                ${i}
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse">
-                                <div class="accordion-body resize">
-                                    <iframe src=${params.get(i)}></iframe>
+                if(i !== "Title"){         
+                    if(!hastitle){
+                        title += i + ", "
+                    }    
+                    let html =  `<div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="false" aria-controls="panelsStayOpen-collapse${idx}">
+                                    ${i}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse">
+                                    <div class="accordion-body resize">
+                                        <iframe src=${params.get(i)}></iframe>
+                                    </div>
                                 </div>
-                            </div>
-                         </div>`
-            
-                let acc = document.createElement("div")
-                acc.className = "accordian-item"
-                acc.innerHTML = html
-                accordian.appendChild(acc)
-
+                             </div>`
+                
+                    let acc = document.createElement("div")
+                    acc.className = "accordian-item"
+                    acc.innerHTML = html
+                    accordian.appendChild(acc)
+                }
              });
             document.title = title;     
             })
