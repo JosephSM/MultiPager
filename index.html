@@ -52,7 +52,7 @@
       
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":{}  }
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":paramSignature.reduce((acc,curr)=> (acc[curr]= 130, acc),{})  }
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
           });
