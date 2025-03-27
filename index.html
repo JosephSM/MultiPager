@@ -81,11 +81,11 @@
                     }    
                     let html =  `<div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button ${!show? "collapsed": ""}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="false" aria-controls="panelsStayOpen-collapse${idx}">
+                                    <button class="accordion-button ${!show? "collapsed": ""}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="${show? "show": ""}" aria-controls="panelsStayOpen-collapse${idx}">
                                     ${i}
                                     </button>
                                 </h2>
-                                <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse">
+                                <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse ${show? "show": ""}">
                                     <div class="accordion-body resize" style="height:${height}px">
                                         <iframe src=${params.get(i)}></iframe>
                                     </div>
@@ -137,7 +137,7 @@
 
         document.querySelectorAll(".accordion-button").forEach((x, i) => {
             x.addEventListener("click", (e) => { 
-                console.log("clicked: ", e.target)  
+                console.log("clicked: ", e.target);  
                 liveSettings.accordions[paramSignature[i]].show = e.target.className.includes("collapsed")? false : true;
             }
         )})
