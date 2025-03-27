@@ -53,11 +53,11 @@
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
           liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":  paramSignature.reduce((acc, curr) => (acc[curr] = [130,0],acc), {})}
+          console.log(paramSignature, liveSettings)
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
           });
           
-        console.log(paramSignature, liveSettings)
 
         document.addEventListener("DOMContentLoaded", function() {
             document.cookie += "SameSite=None; Secure';"
@@ -121,7 +121,9 @@
             const cr = entry.contentRect;
             let title = entry.target.parentElement.previousElementSibling.firstElementChild.innerText
             console.log(`${title} ${cr.width}px x ${cr.height}px`);
-            liveSettings.sizes[title] = [cr.height, cr.width]
+            if(entry.target.parentElement.className.includes("show")){
+                liveSettings.sizes[title] = [cr.height, cr.width]
+            }
         }
         });
         document.querySelectorAll(".accordion-body").forEach((x) => {ro.observe(x)})
