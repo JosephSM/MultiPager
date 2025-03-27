@@ -58,6 +58,7 @@
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
           });
           
+          
 
         document.addEventListener("DOMContentLoaded", function() {
             document.cookie += "SameSite=None; Secure';"
@@ -115,6 +116,7 @@
 
 
 
+
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         let url = document.location
@@ -131,8 +133,13 @@
         document.querySelectorAll(".accordion-body").forEach((x) => {
             ro.observe(x)
             
-        }
-        )
+        })
+
+        document.querySelectorAll(".accordion-button").forEach((x, i) => {
+            x.addEventListener("click", (e) => {   
+                liveSettings.accordions[paramSignature[i]].show = e.target.className.includes("collapsed")? false : true;
+            }
+        )})
 
 
 
