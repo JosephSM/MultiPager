@@ -52,7 +52,7 @@
       
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]s} ,acc), {})}
           console.log(paramSignature, liveSettings)
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
@@ -136,7 +136,8 @@
         })
 
         document.querySelectorAll(".accordion-button").forEach((x, i) => {
-            x.addEventListener("click", (e) => {   
+            x.addEventListener("click", (e) => { 
+                console.log("clicked: ", e.target)  
                 liveSettings.accordions[paramSignature[i]].show = e.target.className.includes("collapsed")? false : true;
             }
         )})
