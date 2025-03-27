@@ -121,7 +121,7 @@
             const cr = entry.contentRect;
             let title = entry.target.parentElement.previousElementSibling.firstElementChild.innerText
             console.log(`${title} ${cr.width}px x ${cr.height}px`);
-            if(entry.target.parentElement.className.includes("show")){
+            if(entry.target.parentElement.className.includes("show") && cr.height > 5){
                 liveSettings.sizes[title] = [cr.height, cr.width]
             }
         }
