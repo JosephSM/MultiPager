@@ -52,7 +52,7 @@
       
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":paramSignature.reduce((acc,curr)=> (acc[curr]= 130, acc),{})  }
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":  paramSignature.reduce((acc, curr) => (acc[curr] = [130,0],acc), {})}
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
           });
@@ -71,7 +71,7 @@
             params.keys().forEach((i,idx) => {
                 if(i !== "Title"){       
                     // console.log(liveSettings)  
-                    const height = liveSettings.sizes[i][0] || 130
+                    const height = liveSettings.sizes[i][0] 
                     console.log("BBBB",i, height)
                     if(!hastitle){
                         title += i + ", "
