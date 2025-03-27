@@ -10,19 +10,16 @@
         iframe {
             width:100%;
             height:100%;
-/* /*          border:none;
-            display:block; */
         }
 
         .resize {
             resize:vertical;
-            overflow:hidden;
-            min-height: 10px;
-/*             position:relative; */
         }
 
         .accordion-body{
             padding:0px;
+            overflow:hidden;
+            min-height: 10px;
         }
         .accordion-button{
             padding:0px;
@@ -30,25 +27,52 @@
         .accordion-body::-webkit-scrollbar-track-piece{
             display:None;
         }
+
+        /* #settingsDiv{
+            height:30px;
+            width:100%;
+            content: " ";
+            display: block;
+        } */
     </style>
 
     <title>Document</title>
 </head>
 <body>
-      <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
+      
+    <div id="settingsDiv">
+
+    </div>
+    
+    <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
+      
+
+      
+      
+      
       <script>
+          paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":{}  }
+          addEventListener("beforeunload", (event) => {
+              localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
+          });
+          
+        console.log(paramSignature, liveSettings)
 
         document.addEventListener("DOMContentLoaded", function() {
             document.cookie += "SameSite=None; Secure';"
             
-            let accordian = document.querySelector("#accordionPanelsStayOpenExample")
             let params = new URLSearchParams(document.location.search);
             let hastitle = params.get("Title")
             console.log(hastitle)
             let title = hastitle? hastitle: "";
-          
+            
+
             params.keys().forEach((i,idx) => {
-                if(i !== "Title"){         
+                if(i !== "Title"){       
+                    // console.log(liveSettings)  
+                    const height = liveSettings.sizes[i][0] || 130
+                    console.log("BBBB",i, height)
                     if(!hastitle){
                         title += i + ", "
                     }    
@@ -59,7 +83,7 @@
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapse${idx}" class="show accordion-collapse collapse">
-                                    <div class="accordion-body resize">
+                                    <div class="accordion-body resize" style="height:${height}px">
                                         <iframe src=${params.get(i)}></iframe>
                                     </div>
                                 </div>
@@ -68,6 +92,7 @@
                     let acc = document.createElement("div")
                     acc.className = "accordian-item"
                     acc.innerHTML = html
+                    let accordian = document.querySelector("#accordionPanelsStayOpenExample")
                     accordian.appendChild(acc)
                 }
              });
@@ -85,5 +110,25 @@
             // });
             // document.querySelectorAll(".accordion-body").forEach((x) => {ro.observe(x)})
       </script>
+
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let url = document.location
+        var ro = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            const cr = entry.contentRect;
+            let title = entry.target.parentElement.previousElementSibling.firstElementChild.innerText
+            console.log(`${title} ${cr.width}px x ${cr.height}px`);
+            liveSettings.sizes[title] = [cr.height, cr.width]
+        }
+        });
+        document.querySelectorAll(".accordion-body").forEach((x) => {ro.observe(x)})
+
+
+
+    })
+    </script>
     </body>
 </html>
