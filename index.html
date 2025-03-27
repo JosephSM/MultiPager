@@ -52,11 +52,11 @@
       
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]s} ,acc), {})}
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
           console.log(paramSignature, liveSettings)
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
-          });
+          }); 
           
           
 
