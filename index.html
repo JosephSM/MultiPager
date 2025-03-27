@@ -81,7 +81,7 @@
                     }    
                     let html =  `<div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button ${!show? "collapsed": ""}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="${show? "show": ""}" aria-controls="panelsStayOpen-collapse${idx}">
+                                    <button class="accordion-button ${show? "collapsed": ""}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="${show? "show": ""}" aria-controls="panelsStayOpen-collapse${idx}">
                                     ${i}
                                     </button>
                                 </h2>
