@@ -52,7 +52,7 @@
       
       <script>
           paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"sizes":  paramSignature.reduce((acc, curr) => (acc[curr] = [130,0],acc), {})}
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
           console.log(paramSignature, liveSettings)
           addEventListener("beforeunload", (event) => {
               localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
@@ -71,18 +71,20 @@
             params.keys().forEach((i,idx) => {
                 if(i !== "Title"){       
                     // console.log(liveSettings)  
-                    const height = liveSettings.sizes[i][0] 
+                    const setting = liveSettings.accordions[i]
+                    const height = setting.size[0] 
+                    const show = setting.show
                     console.log("BBBB",i, height)
                     if(!hastitle){
                         title += i + ", "
                     }    
                     let html =  `<div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="false" aria-controls="panelsStayOpen-collapse${idx}">
+                                    <button class="accordion-button ${!show? "collapsed": ""}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="false" aria-controls="panelsStayOpen-collapse${idx}">
                                     ${i}
                                     </button>
                                 </h2>
-                                <div id="panelsStayOpen-collapse${idx}" class="show accordion-collapse collapse">
+                                <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse">
                                     <div class="accordion-body resize" style="height:${height}px">
                                         <iframe src=${params.get(i)}></iframe>
                                     </div>
@@ -122,11 +124,15 @@
             let title = entry.target.parentElement.previousElementSibling.firstElementChild.innerText
             console.log(`${title} ${cr.width}px x ${cr.height}px`);
             if(entry.target.parentElement.className.includes("show") && cr.height > 5){
-                liveSettings.sizes[title] = [cr.height, cr.width]
+                liveSettings.accordions[title].size = [cr.height, cr.width]
             }
         }
         });
-        document.querySelectorAll(".accordion-body").forEach((x) => {ro.observe(x)})
+        document.querySelectorAll(".accordion-body").forEach((x) => {
+            ro.observe(x)
+            
+        }
+        )
 
 
 
