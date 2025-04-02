@@ -79,17 +79,6 @@
             liveSettings.adjustSize = !liveSettings.adjustSize
             saveToStorage()
         })
-        
-        document.querySelector("#adjustSize").addEventListener("click", () => {
-            Array.from(document.querySelectorAll(".accordion-header"))
-                .forEach((x) => 
-                    x.classList.toggle("d-none"))
-            Array.from(document.querySelectorAll(".accordion-body"))
-                .forEach((x) => 
-                    x.classList.toggle("resize"))
-            liveSettings.adjustSize = !liveSettings.adjustSize
-            saveToStorage()
-        })
 
         document.addEventListener("DOMContentLoaded", function() {
             
