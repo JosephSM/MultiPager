@@ -89,7 +89,7 @@
                 if(i !== "Title"){       
                     // console.log(liveSettings)  
                     const setting = liveSettings.accordions[i]
-                    const adjustsize = liveSettings.adjustSize
+                    const adjustSize = liveSettings.adjustSize
                     const height = setting.size[0] 
                     const show = setting.show
                     console.log("BBBB",i, height)
@@ -97,7 +97,7 @@
                         title += i + ", "
                     }    
                     let html =  `<div class="accordion-item">
-                                <h2 class="accordion-header ${(adjustsize)? "":"d-none"}">
+                                <h2 class="accordion-header ${(adjustSize)? "":"d-none"}">
                                     <button class="accordion-button ${(show)? "": "collapsed"}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="${(show)? "show": ""}" aria-controls="panelsStayOpen-collapse${idx}">
                                     ${i}
                                     </button>
