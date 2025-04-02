@@ -54,7 +54,25 @@
     <!-- TODO: No Scroll on Accordians -->
     <!-- <div id="settingsDiv"></div> -->
     <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
+    <script type="text/javascript">
+        var eventMethod = window.addEventListener
+                ? "addEventListener"
+                : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod === "attachEvent"
+            ? "onmessage"
+            : "message";
     
+        eventer(messageEvent, function (e) {
+            
+            // if (e.origin !== 'http://the-trusted-iframe-origin.com') return;
+            
+            if (e.data === "selectionHighlight" || e.message === "selectionHighlight") 
+                alert('Message from iframe just came!');
+            
+            console.log("messasge", e);
+        });
+    </script>
     <script>
          
         function saveToStorage(){
