@@ -90,6 +90,7 @@
                 Array.from(document.querySelectorAll(".accordion-body"))
                     .forEach((x) => 
                         x.classList.toggle("resize"))
+                liveSettings.adjustSize = !liveSettings.adjustSize
                 saveToStorage()
             })
           
