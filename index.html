@@ -66,25 +66,32 @@
       
       
       <script>
-            document.querySelector("#adjustSize").addEventListener("click", () => {
+
+                    
+          function saveToStorage(){
+            localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
+          }
+
+
+          paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
+          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+          console.log(paramSignature, liveSettings)
+          addEventListener("beforeunload", (event) => {
+              saveToStorage()
+          }); 
+          
+
+
+
+          document.querySelector("#adjustSize").addEventListener("click", () => {
                 Array.from(document.querySelectorAll(".accordion-header"))
                     .forEach((x) => 
                         x.classList.toggle("d-none"))
                 Array.from(document.querySelectorAll(".accordion-body"))
                     .forEach((x) => 
                         x.classList.toggle("resize"))
+                saveToStorage()
             })
-                    
-
-
-
-          paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
-          liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
-          console.log(paramSignature, liveSettings)
-          addEventListener("beforeunload", (event) => {
-              localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
-          }); 
-          
           
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -99,6 +106,7 @@
                 if(i !== "Title"){       
                     // console.log(liveSettings)  
                     const setting = liveSettings.accordions[i]
+                    const adjustsize = liveSettings.adjustSize
                     const height = setting.size[0] 
                     const show = setting.show
                     console.log("BBBB",i, height)
@@ -106,13 +114,13 @@
                         title += i + ", "
                     }    
                     let html =  `<div class="accordion-item">
-                                <h2 class="accordion-header">
+                                <h2 class="accordion-header ${(adjustsize)? "":"d-none"}">
                                     <button class="accordion-button ${(show)? "": "collapsed"}" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${idx}" aria-expanded="${(show)? "show": ""}" aria-controls="panelsStayOpen-collapse${idx}">
                                     ${i}
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse ${(show)? "show": ""}">
-                                    <div class="accordion-body resize" style="height:${height}px">
+                                    <div class="accordion-body ${(adjustSize)? "resize":""}" style="height:${height}px">
                                         <iframe id="${i}" src=${params.get(i)}></iframe>
                                     </div>
                                 </div>
@@ -167,8 +175,6 @@
                 liveSettings.accordions[paramSignature[i]].show = e.target.className.includes("collapsed")? false : true;
             }
         )})
-
-
 
     })
     </script>
