@@ -73,7 +73,7 @@
             // if (e.data === "selectionHighlight" || e.message === "selectionHighlight") 
             //     alert('Message from iframe just came!');
             let [prop, val, obj] = e.data
-            console.log(`Prop ${prop} set to ${val} on ${e.origin}`);
+            console.log(`Prop ${prop} set to ${val} on ${e.origin}`, e);
         });
     </script>
     <script>
