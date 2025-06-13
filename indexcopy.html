@@ -52,75 +52,82 @@
 <body>
     <!-- <script src="https://unpkg.com/@ungap/custom-elements-builtin"></script>
     <script type="module" src="x-frame-bypass.js"></script> -->
-
     <button id="adjustSize"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M145.6 7.7C141 2.8 134.7 0 128 0s-13 2.8-17.6 7.7l-104 112c-6.5 7-8.2 17.2-4.4 25.9S14.5 160 24 160l56 0 0 192-56 0c-9.5 0-18.2 5.7-22 14.4s-2.1 18.9 4.4 25.9l104 112c4.5 4.9 10.9 7.7 17.6 7.7s13-2.8 17.6-7.7l104-112c6.5-7 8.2-17.2 4.4-25.9s-12.5-14.4-22-14.4l-56 0 0-192 56 0c9.5 0 18.2-5.7 22-14.4s2.1-18.9-4.4-25.9l-104-112z"></path></svg></button>
     <!-- TODO: No Scroll on Accordians -->
     <!-- <div id="settingsDiv"></div> -->
     <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
+    
     <script type="text/javascript">
 
+        paramSignature = Array.from(new URLSearchParams(document.location.search).keys())
+        liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+        
+        function saveToStorage(){
+            localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
+        }        
+        
+        const proxyHandler = {
+            get(target, key) {
+                if (key == 'isProxy')
+                    return true;
 
-        var eventMethod = window.addEventListener
-                ? "addEventListener"
-                : "attachEvent";
+                const prop = target[key];
+
+                // return if property not found
+                if (typeof prop == 'undefined')
+                    return;
+
+                // set value as proxy if object
+                if (!prop.isProxy && typeof prop === 'object')
+                    target[key] = new Proxy(prop, handler);
+
+                return target[key];
+            },
+            set(target, key, value) {
+                // console.log('Setting', target, `.${key} to equal`, value);
+                target[key] = value;
+                if (prop === "adjustSize"){
+                    Array.from(document.querySelectorAll(".accordion-header"))
+                        .forEach((x) => x.classList.toggle("d-none"))
+                    Array.from(document.querySelectorAll(".accordion-body"))
+                        .forEach((x) => x.classList.toggle("resize"))
+                }else if(prop === "noscroll"){
+                    
+                }
+                saveToStorage()
+                return true;
+            }
+        };
+
+        const settingsProxy = new Proxy(liveSettings, proxyHandler)
+
+
+        // Message Receiver
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
         var eventer = window[eventMethod];
-        var messageEvent = eventMethod === "attachEvent"
-            ? "onmessage"
-            : "message";
-    
+        var messageEvent = eventMethod === "attachEvent" ? "onmessage"  : "message";
         eventer(messageEvent, function (e) {
             let [prop, val, obj] = e.data
             let iframe = Array.from(document.querySelectorAll("iframe")).filter((x) => x.contentWindow === e.source)[0]
-            let title = Array.from(document.querySelectorAll(".accordian-item>div")).filter(x => x.querySelector("iframe").contentWindow === e.source)[0].firstElementChild.innerText
-            if (prop === "noscroll")
-                settingsProxy.accordions[title].noscroll = val
-            else if (prop === "scrollY"){
-                settingsProxy.accordions[title].scrollY = val
-            }
-            console.log(`Prop ${prop} set to ${val} on ${e.origin} on iframe ${iframe} with title ${title}`, e, liveSettings); 
+            let title = iframe.parentElement.previousElementSibling.firstElementChild.innerText
+            settingsProxy.accordions[title].noscroll = !settingsProxy.accordions[title].noscroll
+            console.log(`Prop ${prop} set to ${val} on ${e.origin} on iframe ${iframe} with title ${title}`, e); 
         });
-    
-        function saveToStorage(){
-            localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
-        }
-    
-    
-        params = new URLSearchParams(document.location.search);
-        hastitle = params.get("Title")
-        paramSignature = Array.from(params.keys())
-        liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+ 
 
-        const proxyHandler = {
-            set(obj, prop, value) {
-                obj[prop] = value;
-                console.log(`Property ${prop} changed to ${value}: ${obj}`, obj, liveSettings);
-                if (prop === "adjustSize"){
-                    Array.from(document.querySelectorAll(".accordion-header"))
-                        .forEach((x) => 
-                            x.classList.toggle("d-none"))
-                    Array.from(document.querySelectorAll(".accordion-body"))
-                        .forEach((x) => 
-                            x.classList.toggle("resize"))
-                    }
-                // if prop === accordions.title.noscroll
-                // if prop === accordians.title.scrollY
-                saveToStorage()
-                return true;
-            },
-        };
-
-        const settingsProxy = new Proxy(liveSettings, proxyHandler);
-
+        
         document.querySelector("#adjustSize").addEventListener("click", () => {
             settingsProxy.adjustSize = !liveSettings.adjustSize
         })
 
         document.addEventListener("DOMContentLoaded", function() {
+            
+            let params = new URLSearchParams(document.location.search);
+            let hastitle = params.get("Title")
             let title = hastitle? hastitle: "";
             params.keys().forEach((i,idx) => {
                 if(i !== "Title"){       
-                    // console.log(liveSettings)  
-                    const setting = liveSettings.accordions[i]
+                    const setting = settingsProxy.accordions[i]
                     const adjustSize = liveSettings.adjustSize
                     const height = setting.size[0] 
                     const show = setting.show
@@ -151,31 +158,27 @@
              });
             document.title = title;     
         })
+    </script>
 
+    <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // let url = document.location
         var ro = new ResizeObserver(entries => {
-        for (let entry of entries) {
+            for (let entry of entries) {
             const cr = entry.contentRect;
             let title = entry.target.parentElement.previousElementSibling.firstElementChild.innerText
-            // console.log(`${title} ${cr.width}px x ${cr.height}px`);
+            console.log(`${title} ${cr.width}px x ${cr.height}px`);
             if(entry.target.parentElement.className.includes("show") && cr.height > 5){
-                liveSettings.accordions[title].size = [cr.height, cr.width]
+                settingsProxy.accordions[title].size = [cr.height, cr.width]
             }
         }
         });
-        document.querySelectorAll(".accordion-body").forEach((x,i) => {
+        document.querySelectorAll(".accordion-body").forEach((x) => {
             ro.observe(x)
-            
-            const setting = settingsProxy.accordions[paramSignature[i]]
-            const url = new URL(params.get(paramSignature[i]))
-            x.firstElementChild.contentWindow.postMessage(setting, url.origin )
-            // console.log("Hello!!!!!")
-            console.log(`Messg:${i}:${paramSignature[i]}:${params.get(paramSignature[i])}`,setting)
         })
 
         document.querySelectorAll(".accordion-button").forEach((x, i) => {
             x.addEventListener("click", (e) => { 
-                console.log("clicked: ", e.target);  
                 settingsProxy.accordions[paramSignature[i]].show = e.target.className.includes("collapsed")? false : true;
             }
         )})
