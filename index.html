@@ -138,7 +138,7 @@
                     const height = setting.size[0] 
                     const scrollH = setting.scrollY
                     const show = setting.show
-                    console.log("BBBB",i, height)
+                    console.log("iFrame:",i, height, scrollH)
                     if(!hastitle){
                         title += i + ", "
                     }    
@@ -181,6 +181,7 @@
             ro.observe(x)
             
             const setting = settingsProxy.accordions[paramSignature[i]]
+            console.log(i, paramSignature, paramSignature[i])
             const url = new URL(params.get(paramSignature[i]))
             x.firstElementChild.contentWindow.postMessage(setting, url.origin )
             console.log(`Messg:${i}:${paramSignature[i]}:${params.get(paramSignature[i])}`,setting)
