@@ -84,7 +84,7 @@
 
             const iframes = Array.from(document.querySelectorAll("iframe"));
 
-            for (const ifrm of ifrms) {
+            for (const ifrm of iframes) {
             // Don't send it back to the source ifrm
             if (ifrm.contentWindow !== e.source) {
                 ifrm.contentWindow.postMessage([prop, val, obj], "*");
