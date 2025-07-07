@@ -136,6 +136,7 @@
                     const setting = liveSettings.accordions[i]
                     const adjustSize = liveSettings.adjustSize
                     const height = setting.size[0] 
+                    const scrollH = setting.scrollY
                     const show = setting.show
                     console.log("BBBB",i, height)
                     if(!hastitle){
@@ -148,7 +149,7 @@
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapse${idx}" class="accordion-collapse collapse ${(show)? "show": ""}">
-                                    <div class="accordion-body ${(adjustSize)? "resize":""}" style="height:${height}px">
+                                    <div class="accordion-body ${(adjustSize)? "resize":""}" style="height:${height}px; scrollY:${scrollH}">
                                         <!-- <iframe is="x-frame-bypass" id="${i}" src=${params.get(i)}></iframe> -->
                                         <iframe id="${i}" src=${params.get(i)}></iframe>
                                         </div>
