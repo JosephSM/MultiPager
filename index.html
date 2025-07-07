@@ -50,16 +50,14 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- <script src="https://unpkg.com/@ungap/custom-elements-builtin"></script>
-    <script type="module" src="x-frame-bypass.js"></script> -->
-
-    <button id="adjustSize"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M145.6 7.7C141 2.8 134.7 0 128 0s-13 2.8-17.6 7.7l-104 112c-6.5 7-8.2 17.2-4.4 25.9S14.5 160 24 160l56 0 0 192-56 0c-9.5 0-18.2 5.7-22 14.4s-2.1 18.9 4.4 25.9l104 112c4.5 4.9 10.9 7.7 17.6 7.7s13-2.8 17.6-7.7l104-112c6.5-7 8.2-17.2 4.4-25.9s-12.5-14.4-22-14.4l-56 0 0-192 56 0c9.5 0 18.2-5.7 22-14.4s2.1-18.9-4.4-25.9l-104-112z"></path></svg></button>
+    <button id="adjustSize">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M145.6 7.7C141 2.8 134.7 0 128 0s-13 2.8-17.6 7.7l-104 112c-6.5 7-8.2 17.2-4.4 25.9S14.5 160 24 160l56 0 0 192-56 0c-9.5 0-18.2 5.7-22 14.4s-2.1 18.9 4.4 25.9l104 112c4.5 4.9 10.9 7.7 17.6 7.7s13-2.8 17.6-7.7l104-112c6.5-7 8.2-17.2 4.4-25.9s-12.5-14.4-22-14.4l-56 0 0-192 56 0c9.5 0 18.2-5.7 22-14.4s2.1-18.9-4.4-25.9l-104-112z"></path></svg>
+    </button>
     <!-- TODO: No Scroll on Accordians -->
     <!-- <div id="settingsDiv"></div> -->
     <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
     <script type="text/javascript">
-
-
+        // Add listener to window to detect for message events (from iframes)
         var eventMethod = window.addEventListener
                 ? "addEventListener"
                 : "attachEvent";
@@ -68,6 +66,11 @@
             ? "onmessage"
             : "message";
     
+        // format of message data is setting change... prop, val, obj
+        // logs ${prop} set to ${val} on ${e.origin} on iframe ${iframe} with title ${title}
+        // for setting Parent level (MultiPager) settings
+        // like noscroll or scrollY position in settingsProxy
+        
         eventer(messageEvent, function (e) {
             let [prop, val, obj] = e.data
             let iframe = Array.from(document.querySelectorAll("iframe")).filter((x) => x.contentWindow === e.source)[0]
@@ -80,6 +83,16 @@
             console.log(`Prop ${prop} set to ${val} on ${e.origin} on iframe ${iframe} with title ${title}`, e, liveSettings); 
         });
     
+
+        // TODO:save settings
+        // Done 1. at the paramSignature level
+        // 2. at the individual iframe title level
+
+        // Settings Loading iframes
+        // 1. on page load
+        // 2. on accordian open
+        // 3. only on iframe refresh
+
         function saveToStorage(){
             localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
         }
@@ -169,7 +182,6 @@
             const setting = settingsProxy.accordions[paramSignature[i]]
             const url = new URL(params.get(paramSignature[i]))
             x.firstElementChild.contentWindow.postMessage(setting, url.origin )
-            // console.log("Hello!!!!!")
             console.log(`Messg:${i}:${paramSignature[i]}:${params.get(paramSignature[i])}`,setting)
         })
 
