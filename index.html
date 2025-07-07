@@ -63,6 +63,7 @@
         paramSignature = Array.from(params.keys())
         liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
         console.log("Params!!:", params, hastitle,paramSignature, liveSettings)
+       
         // Add listener to window to detect for message events (from iframes)
         var eventMethod = window.addEventListener
                 ? "addEventListener"
@@ -95,7 +96,7 @@
             if (ifrm.contentWindow !== e.source) {
                 ifrm.contentWindow.postMessage([prop, val, obj], "*");
             } else if (prop === "Page Loaded") {
-                ifrm.contentWindow.postMessage(["Settings Drop", liveSettings.accordions[title], title], "*");
+                ifrm.contentWindow.postMessage(["Settings Drop", liveSettings.accordions[title.trim()], title], "*");
             }
             }
         });
