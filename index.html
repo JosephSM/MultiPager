@@ -57,6 +57,12 @@
     <!-- <div id="settingsDiv"></div> -->
     <div class="accordion" id="accordionPanelsStayOpenExample"> </div>
     <script type="text/javascript">
+    
+        params = new URLSearchParams(document.location.search);
+        hastitle = params.get("Title")
+        paramSignature = Array.from(params.keys())
+        liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+        console.log("Params!!:", params, hastitle,paramSignature, liveSettings)
         // Add listener to window to detect for message events (from iframes)
         var eventMethod = window.addEventListener
                 ? "addEventListener"
@@ -108,12 +114,6 @@
             localStorage.setItem(JSON.stringify(paramSignature), JSON.stringify(liveSettings))
         }
     
-    
-        params = new URLSearchParams(document.location.search);
-        hastitle = params.get("Title")
-        paramSignature = Array.from(params.keys())
-        liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
-        console.log("Params!!:", params, hastitle,paramSignature, liveSettings)
 
         const proxyHandler = {
             set(obj, prop, value) {
