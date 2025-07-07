@@ -182,7 +182,7 @@
             
             const setting = settingsProxy.accordions[paramSignature[i]]
             console.log("Par: ", i, paramSignature, paramSignature[i], params.get(paramSignature[i]))
-            const url = new URL(params.get(paramSignature[i]))
+            const url = new URL(params.get(paramSignature[i].replace(/^'+|'+$/g, '')))
             x.firstElementChild.contentWindow.postMessage(setting, url.origin )
             console.log(`Messg:${i}:${paramSignature[i]}:${params.get(paramSignature[i])}`,setting)
         })
