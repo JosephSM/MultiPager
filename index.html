@@ -89,7 +89,7 @@
             if (ifrm.contentWindow !== e.source) {
                 ifrm.contentWindow.postMessage([prop, val, obj], "*");
             } else if (prop === "Page Loaded") {
-                ifrm.contentWindow.postMessage(["Settings Drop", liveSettings[title], title], "*");
+                ifrm.contentWindow.postMessage(["Settings Drop", liveSettings.accordions[title], title], "*");
             }
             }
         });
