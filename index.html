@@ -102,6 +102,7 @@
         hastitle = params.get("Title")
         paramSignature = Array.from(params.keys())
         liveSettings = JSON.parse(localStorage.getItem(JSON.stringify(paramSignature))) || {"adjustSize":true, "accordions":  paramSignature.reduce((acc, curr) => (acc[curr] = {size:[130,0]} ,acc), {})}
+        console.log("Params!!:", params, hastitle,paramSignature, liveSettings)
 
         const proxyHandler = {
             set(obj, prop, value) {
