@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "../MultiPager Extension"
+	},
+	{
+		"path": "."
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "MultiPager Extension"
+  }
+}
